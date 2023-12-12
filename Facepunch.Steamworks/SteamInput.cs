@@ -9,6 +9,11 @@ namespace Steamworks
 	/// </summary>
 	public class SteamInput : SteamClientClass<SteamInput>
 	{
+		/// <summary>
+		/// Set to 'true' before initializing this interface, if you want to call <see cref="SteamInput.RunFrame" /> manually.
+		/// </summary>
+		public static bool ExplicitRunFrameCalls = false;
+		
 		internal static ISteamInput Internal => Interface as ISteamInput;
 
 		internal override bool InitializeInterface( bool server )
@@ -16,7 +21,14 @@ namespace Steamworks
 			SetInterface( server, new ISteamInput( server ) );
 			if ( Interface.Self == IntPtr.Zero ) return false;
 
+			Internal.Init( ExplicitRunFrameCalls );
 			return true;
+		}
+
+		internal override void DestroyInterface( bool server )
+		{
+			Internal?.Shutdown();
+			base.DestroyInterface( server );
 		}
 
 		internal const int STEAM_CONTROLLER_MAX_COUNT = 16;
@@ -24,6 +36,7 @@ namespace Steamworks
 
 		/// <summary>
 		/// You shouldn't really need to call this because it gets called by <see cref="SteamClient.RunCallbacks"/>
+		/// (unless you set <see cref="SteamInput.ExplicitRunFrameCalls" /> to 'true' before initialization)
 		/// but Valve think it might be a nice idea if you call it right before you get input info -
 		/// just to make sure the info you're getting is 100% up to date.
 		/// </summary>
