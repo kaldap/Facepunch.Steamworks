@@ -47,6 +47,14 @@ namespace Steamworks
 			return SteamInput.Internal.GetAnalogActionData( Handle, SteamInput.GetAnalogActionHandle( actionName ) );
 		}
 
+		/// <summary>
+		/// Invokes the Steam overlay and brings up the binding screen.
+		/// </summary>
+		/// <returns>true for success; false if overlay is disabled/unavailable, or the user is not in Big Picture Mode.</returns>
+		public bool ShowBindingPanel()
+		{
+			return SteamInput.Internal.ShowBindingPanel( Handle );
+		}
 
 		public override string ToString() => $"{InputType}.{Handle.Value}";
 
