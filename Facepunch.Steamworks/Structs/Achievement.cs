@@ -48,6 +48,10 @@ namespace Steamworks.Data
 		/// </summary>
 		public string Description => SteamUserStats.Internal.GetAchievementDisplayAttribute( Value, "desc" );
 
+		/// <summary>
+		/// Returns true when the achievement is hidden.
+		/// </summary>
+		public bool Hidden => SteamUserStats.Internal.GetAchievementDisplayAttribute( Value, "hidden" ) == "1";
 
 		/// <summary>
 		/// If <see cref="State"/> is <see langword="true"/>, this value represents the time that the achievement was unlocked.
