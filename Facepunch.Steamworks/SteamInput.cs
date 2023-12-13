@@ -107,9 +107,9 @@ namespace Steamworks
 		/// Return an absolute path to the PNG image glyph for the provided action origin. 
 		/// You should cache the result and maintain your own list of loaded PNG assets.
 		/// </summary>
-		public static string GetPngActionGlyph( InputActionOrigin origin, GlyphSize size )
+		public static string GetPngActionGlyph( InputActionOrigin origin, GlyphSize size, SteamInputGlyphStyle style = SteamInputGlyphStyle.Knockout )
 		{
-			return Internal.GetGlyphPNGForActionOrigin( origin, size, 0 );
+			return Internal.GetGlyphPNGForActionOrigin( origin, size, (uint)style );
 		}
 
 

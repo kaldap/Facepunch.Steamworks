@@ -1584,7 +1584,7 @@ namespace Steamworks
 	//
 	// ESteamInputGlyphStyle
 	//
-	internal enum SteamInputGlyphStyle : int
+	public enum SteamInputGlyphStyle : int
 	{
 		Knockout = 0,
 		Light = 1,
