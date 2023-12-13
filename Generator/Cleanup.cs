@@ -137,6 +137,7 @@ public static class Cleanup
 		if ( name == "P2PSessionError" ) return "public";
 		if ( name == "InputType" ) return "public";
 		if ( name == "InputSourceMode" ) return "public";
+		if ( name == "InputActionOrigin" ) return "public";
 		if ( name == "UserHasLicenseForAppResult" ) return "public";
 		if ( name == "NetPingLocation" ) return "public";
 		if ( name == "ConnectionState" ) return "public";
