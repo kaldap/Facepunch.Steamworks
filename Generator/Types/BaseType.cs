@@ -12,13 +12,14 @@ internal class BaseType
 	public virtual string TypeNameFrom => TypeName;
 
 	public string Func;
+	protected bool TreatAsArray = false;
 
-	public static BaseType Parse( string type, string varname = null, string callresult = null )
+	public static BaseType Parse( string type, string varname = null, string callresult = null, bool treatAsArray = false )
 	{
 		type = Cleanup.ConvertType( type );
 
-		if ( varname == "ppOutMessages" ) return new PointerType { NativeType = "void *", VarName = varname };
-		if ( type == "SteamAPIWarningMessageHook_t" ) return new PointerType { NativeType = type, VarName = varname };
+		if ( varname == "ppOutMessages" ) return new PointerType { NativeType = "void *", VarName = varname, TreatAsArray = treatAsArray };
+		if ( type == "SteamAPIWarningMessageHook_t" ) return new PointerType { NativeType = type, VarName = varname, TreatAsArray = treatAsArray };
 
 		if ( type == "SteamAPICall_t" ) return new SteamApiCallType { NativeType = type, VarName = varname, CallResult = callresult };
 
@@ -28,29 +29,29 @@ internal class BaseType
 
 		var basicType = type.Replace( "const ", "" ).Trim( ' ', '*', '&' );
 
-		if ( basicType == "void" ) return new PointerType { NativeType = type, VarName = varname };
-		if ( basicType.StartsWith( "ISteam" ) ) return new PointerType { NativeType = type, VarName = varname };
-		if ( basicType == "const void" ) return new PointerType { NativeType = type, VarName = varname };
-		if ( basicType == "int32" || basicType == "int" ) return new IntType { NativeType = type, VarName = varname };
-		if ( basicType == "uint" ) return new UIntType { NativeType = type, VarName = varname };
-		if ( basicType == "uint8" ) return new UInt8Type { NativeType = type, VarName = varname };
-		if ( basicType == "uint16" ) return new UInt16Type { NativeType = type, VarName = varname };
-		if ( basicType == "unsigned short" ) return new UInt16Type { NativeType = type, VarName = varname };
+		if ( basicType == "void" ) return new PointerType { NativeType = type, VarName = varname, TreatAsArray = treatAsArray };
+		if ( basicType.StartsWith( "ISteam" ) ) return new PointerType { NativeType = type, VarName = varname, TreatAsArray = treatAsArray };
+		if ( basicType == "const void" ) return new PointerType { NativeType = type, VarName = varname, TreatAsArray = treatAsArray };
+		if ( basicType == "int32" || basicType == "int" ) return new IntType { NativeType = type, VarName = varname, TreatAsArray = treatAsArray };
+		if ( basicType == "uint" ) return new UIntType { NativeType = type, VarName = varname, TreatAsArray = treatAsArray };
+		if ( basicType == "uint8" ) return new UInt8Type { NativeType = type, VarName = varname, TreatAsArray = treatAsArray };
+		if ( basicType == "uint16" ) return new UInt16Type { NativeType = type, VarName = varname, TreatAsArray = treatAsArray };
+		if ( basicType == "unsigned short" ) return new UInt16Type { NativeType = type, VarName = varname, TreatAsArray = treatAsArray };
 		
 		// DANGER DANGER Danger
-		if ( basicType == "intptr_t" ) return new PointerType { NativeType = type, VarName = varname };
-		if ( basicType == "size_t" ) return new UIntPtrType { NativeType = type, VarName = varname };
+		if ( basicType == "intptr_t" ) return new PointerType { NativeType = type, VarName = varname, TreatAsArray = treatAsArray };
+		if ( basicType == "size_t" ) return new UIntPtrType { NativeType = type, VarName = varname, TreatAsArray = treatAsArray };
 
-		if ( basicType == "uint64" ) return new ULongType { NativeType = type, VarName = varname };
-		if ( basicType == "int64" ) return new LongType { NativeType = type, VarName = varname };
-		if ( basicType == "bool" ) return new BoolType { NativeType = type, VarName = varname };
+		if ( basicType == "uint64" ) return new ULongType { NativeType = type, VarName = varname, TreatAsArray = treatAsArray };
+		if ( basicType == "int64" ) return new LongType { NativeType = type, VarName = varname, TreatAsArray = treatAsArray };
+		if ( basicType == "bool" ) return new BoolType { NativeType = type, VarName = varname, TreatAsArray = treatAsArray };
 
 		//
 		// Enum types are handled in a generic way, but we do need to clean up the name
 		//
 		if ( Generator.CodeWriter.Current.IsEnum( basicType ) )
 		{
-			return new BaseType { NativeType = Cleanup.CleanEnum( type ), VarName = varname };
+			return new BaseType { NativeType = Cleanup.CleanEnum( type ), VarName = varname, TreatAsArray = treatAsArray };
 		}
 
 		//
@@ -58,7 +59,7 @@ internal class BaseType
 		//
 		if ( Generator.CodeWriter.Current.IsStruct( basicType ) )
 		{
-			return new StructType { NativeType = type, VarName = varname, StructName = basicType };
+			return new StructType { NativeType = type, VarName = varname, StructName = basicType, TreatAsArray = treatAsArray };
 		}
 
 		//
@@ -67,10 +68,10 @@ internal class BaseType
 		//
 		if ( Generator.CodeWriter.Current.IsTypeDef( basicType ) )
 		{
-			return new StructType { NativeType = type, VarName = varname, StructName = basicType };
+			return new StructType { NativeType = type, VarName = varname, StructName = basicType, TreatAsArray = treatAsArray };
 		}
 
-		return new BaseType { NativeType = type, VarName = varname };
+		return new BaseType { NativeType = type, VarName = varname, TreatAsArray = treatAsArray };
 	}
 
 	public virtual bool ShouldSkipAsArgument => false;
@@ -101,6 +102,7 @@ internal class BaseType
 	{
 		get
         {
+			if ( TreatAsArray ) return true;
             if ( TreatAsPointer ) return false;
 
 			if ( Func == "ReadP2PPacket" ) return false;

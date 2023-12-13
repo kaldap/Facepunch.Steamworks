@@ -27,6 +27,10 @@ namespace Generator
                 {
                     public string ParamType { get; set; }
                     public string ParamName { get; set; }
+					[JsonProperty( PropertyName = "array_count" )]
+					public string InArrayCount { get; set; }
+					[JsonProperty(PropertyName = "out_array_count" )]
+					public string OutArrayCount { get; set; }
                 }
 
                 public Param[] Params { get; set; }

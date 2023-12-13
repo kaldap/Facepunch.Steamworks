@@ -89,7 +89,7 @@ namespace Generator
 
 			var args = func.Params.Select( x =>
 			{
-				var bt = BaseType.Parse( x.ParamType, x.ParamName );
+				var bt = BaseType.Parse( x.ParamType, x.ParamName, null, x.InArrayCount != null || x.OutArrayCount != null );
 				bt.Func = func.Name;
 				return bt;
 			} ).ToArray();
