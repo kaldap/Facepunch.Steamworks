@@ -26,7 +26,7 @@ namespace Steamworks
 		public string ActionSet
 		{
 			set => SteamInput.Internal.ActivateActionSet( Handle, SteamInput.GetActionSetHandle( value ) );
-		}		
+		}
 
 		public void DeactivateLayer( string layer ) => SteamInput.Internal.DeactivateActionSetLayer( Handle, SteamInput.GetActionSetHandle( layer ) );
 		public void ActivateLayer( string layer ) => SteamInput.Internal.ActivateActionSetLayer( Handle, SteamInput.GetActionSetHandle( layer ) );
@@ -41,10 +41,10 @@ namespace Steamworks
 		/// This is cheap, and Valve recommends you re-gather the origins each frame to update your ingame prompts in case they have changed.
 		/// </para>
 		/// </summary>
-		public IEnumerable<InputActionOrigin> GetAnalogActionOrigins( string actionName )
+		public IEnumerable<InputActionOrigin> GetAnalogActionOrigins( string actionName, string actionSetName = null )
 		{
 			InputActionOrigin[] actionOrigins = new InputActionOrigin[SteamInput.STEAM_INPUT_MAX_ORIGINS];
-			int numOrigins = SteamInput.Internal.GetAnalogActionOrigins( Handle, ActionSetHandle, SteamInput.Internal.GetAnalogActionHandle( actionName ), actionOrigins );
+			int numOrigins = SteamInput.Internal.GetAnalogActionOrigins( Handle, GetActionSetHandle( actionSetName ), SteamInput.Internal.GetAnalogActionHandle( actionName ), actionOrigins );
 			return actionOrigins.Take( numOrigins );
 		}
 
@@ -55,10 +55,10 @@ namespace Steamworks
 		/// This is cheap, and Valve recommends you re-gather the origins each frame to update your ingame prompts in case they have changed.
 		/// </para>
 		/// </summary>
-		public IEnumerable<InputActionOrigin> GetDigitalActionOrigins( string actionName )
+		public IEnumerable<InputActionOrigin> GetDigitalActionOrigins( string actionName, string actionSetName = null )
 		{
 			InputActionOrigin[] actionOrigins = new InputActionOrigin[SteamInput.STEAM_INPUT_MAX_ORIGINS];
-			int numOrigins = SteamInput.Internal.GetDigitalActionOrigins( Handle, ActionSetHandle, SteamInput.Internal.GetDigitalActionHandle( actionName ), actionOrigins );
+			int numOrigins = SteamInput.Internal.GetDigitalActionOrigins( Handle, GetActionSetHandle( actionSetName ), SteamInput.Internal.GetDigitalActionHandle( actionName ), actionOrigins );
 			return actionOrigins.Take( numOrigins );
 		}
 
@@ -143,6 +143,17 @@ namespace Steamworks
 		public void RestoreUserLEDColor()
 		{
 			SteamInput.Internal.SetLEDColor( Handle, 0, 0, 0, (uint)SteamControllerLEDFlag.RestoreUserDefault );
+		}
+
+		/// <summary>
+		/// Finds the action set by its name or returns the current set if null name is provided
+		/// </summary>
+		internal InputActionSetHandle_t GetActionSetHandle( string actionSetName )
+		{
+			if ( actionSetName == null )
+				return ActionSetHandle;
+
+			return SteamInput.GetActionSetHandle( actionSetName );
 		}
 
 		public override string ToString() => $"{InputType}.{Handle.Value}";
