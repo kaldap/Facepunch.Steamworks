@@ -108,12 +108,12 @@ namespace Steamworks
 		#region FunctionMeta
 		[DllImport( Platform.LibraryName, EntryPoint = "SteamAPI_ISteamInventory_GetItemsByID", CallingConvention = Platform.CC)]
 		[return: MarshalAs( UnmanagedType.I1 )]
-		private static extern bool _GetItemsByID( IntPtr self, ref SteamInventoryResult_t pResultHandle, ref InventoryItemId pInstanceIDs, uint unCountInstanceIDs );
+		private static extern bool _GetItemsByID( IntPtr self, ref SteamInventoryResult_t pResultHandle, [In,Out] InventoryItemId[]  pInstanceIDs, uint unCountInstanceIDs );
 		
 		#endregion
-		internal bool GetItemsByID( ref SteamInventoryResult_t pResultHandle, ref InventoryItemId pInstanceIDs, uint unCountInstanceIDs )
+		internal bool GetItemsByID( ref SteamInventoryResult_t pResultHandle, [In,Out] InventoryItemId[]  pInstanceIDs, uint unCountInstanceIDs )
 		{
-			var returnValue = _GetItemsByID( Self, ref pResultHandle, ref pInstanceIDs, unCountInstanceIDs );
+			var returnValue = _GetItemsByID( Self, ref pResultHandle, pInstanceIDs, unCountInstanceIDs );
 			return returnValue;
 		}
 		

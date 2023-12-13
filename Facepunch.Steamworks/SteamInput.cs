@@ -32,6 +32,7 @@ namespace Steamworks
 		}
 
 		internal const int STEAM_CONTROLLER_MAX_COUNT = 16;
+		internal const int STEAM_INPUT_MAX_ORIGINS = 8;
 
 
 		/// <summary>
@@ -64,26 +65,27 @@ namespace Steamworks
 		}
 
 
-        /// <summary>
-        /// Return an absolute path to the PNG image glyph for the provided digital action name. The current
-        /// action set in use for the controller will be used for the lookup. You should cache the result and
-        /// maintain your own list of loaded PNG assets.
-        /// </summary>
-        /// <param name="controller"></param>
-        /// <param name="action"></param>
-        /// <returns></returns>
-        public static string GetDigitalActionGlyph( Controller controller, string action )
+		/// <summary>
+		/// Return an absolute path to the PNG image glyph for the provided digital action name. The current
+		/// action set in use for the controller will be used for the lookup. You should cache the result and
+		/// maintain your own list of loaded PNG assets.
+		/// </summary>
+		/// <param name="controller"></param>
+		/// <param name="action"></param>
+		/// <param name="index"></param>
+		/// <returns></returns>
+		public static string GetDigitalActionGlyph( Controller controller, string action, int index = 0 )
         {
-            InputActionOrigin origin = InputActionOrigin.None;
+            InputActionOrigin[] origins = new InputActionOrigin[STEAM_INPUT_MAX_ORIGINS];
 
-            Internal.GetDigitalActionOrigins(
+            int count = Internal.GetDigitalActionOrigins(
                 controller.Handle,
                 Internal.GetCurrentActionSet(controller.Handle),
                 GetDigitalActionHandle(action),
-                ref origin
+                origins
             );
 
-            return Internal.GetGlyphForActionOrigin_Legacy(origin);
+            return Internal.GetGlyphForActionOrigin_Legacy( (index >= count) ? InputActionOrigin.None : origins[index] );
         }
 
 
@@ -92,13 +94,13 @@ namespace Steamworks
 		/// action set in use for the controller will be used for the lookup. You should cache the result and
 		/// maintain your own list of loaded PNG assets.
 		/// </summary>
-		public static string GetPngActionGlyph( Controller controller, string action, GlyphSize size )
+		public static string GetPngActionGlyph( Controller controller, string action, GlyphSize size, int index = 0 )
 		{
-			InputActionOrigin origin = InputActionOrigin.None;
+			InputActionOrigin[] origins = new InputActionOrigin[STEAM_INPUT_MAX_ORIGINS];
 
-			Internal.GetDigitalActionOrigins( controller.Handle, Internal.GetCurrentActionSet( controller.Handle ), GetDigitalActionHandle( action ), ref origin );
+			int count = Internal.GetDigitalActionOrigins( controller.Handle, Internal.GetCurrentActionSet( controller.Handle ), GetDigitalActionHandle( action ), origins );
 
-			return Internal.GetGlyphPNGForActionOrigin( origin, size, 0 );
+			return Internal.GetGlyphPNGForActionOrigin( (index >= count) ? InputActionOrigin.None : origins[index], size, 0 );
 		}
 
 		/// <summary>
@@ -106,13 +108,13 @@ namespace Steamworks
 		/// action set in use for the controller will be used for the lookup. You should cache the result and
 		/// maintain your own list of loaded PNG assets.
 		/// </summary>
-		public static string GetSvgActionGlyph( Controller controller, string action )
+		public static string GetSvgActionGlyph( Controller controller, string action, int index = 0 )
 		{
-			InputActionOrigin origin = InputActionOrigin.None;
+			InputActionOrigin[] origins = new InputActionOrigin[STEAM_INPUT_MAX_ORIGINS];
 
-			Internal.GetDigitalActionOrigins( controller.Handle, Internal.GetCurrentActionSet( controller.Handle ), GetDigitalActionHandle( action ), ref origin );
+			int count = Internal.GetDigitalActionOrigins( controller.Handle, Internal.GetCurrentActionSet( controller.Handle ), GetDigitalActionHandle( action ), origins );
 
-			return Internal.GetGlyphSVGForActionOrigin( origin, 0 );
+			return Internal.GetGlyphSVGForActionOrigin( (index >= count) ? InputActionOrigin.None : origins[index], 0 );
 		}
 
 		internal static Dictionary<string, InputDigitalActionHandle_t> DigitalHandles = new Dictionary<string, InputDigitalActionHandle_t>();
