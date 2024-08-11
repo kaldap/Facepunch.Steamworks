@@ -193,8 +193,9 @@ namespace Steamworks.Ugc
 				{
 					using ( var a = SteamParamStringArray.From( Tags.ToArray() ) )
 					{
-						var val = a.Value;
-						SteamUGC.Internal.SetItemTags( handle, ref val );
+						// ToDo: Admin tags support
+						var val = a.Value;						
+						SteamUGC.Internal.SetItemTags( handle, ref val, false );
 					}
 				}
 

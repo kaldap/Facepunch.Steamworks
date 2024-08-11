@@ -11,7 +11,7 @@ namespace Steamworks
 
 		internal struct Memory : IDisposable
 		{
-			private const int MaxBagSize = 4;
+			private const int MaxBagSize = 8;
 			private static readonly Queue<IntPtr> BufferBag = new Queue<IntPtr>();
 
 			public IntPtr Ptr { get; private set; }
