@@ -77,6 +77,7 @@ public static class Cleanup
 	{
 		if ( IsDeprecated( type ) ) return false;
 		if ( type == "SteamId" ) return false;
+		if ( type == "SteamErrMsg" ) return false;
 		if ( type == "LeaderboardSort" ) return false;
 		if ( type == "LeaderboardDisplay" ) return false;
 		if ( type == "AppId" ) return false;
