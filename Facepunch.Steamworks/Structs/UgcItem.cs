@@ -392,16 +392,54 @@ namespace Steamworks.Ugc
 			return new Ugc.Editor( Id );
 		}
 
+		/// <summary>
+		/// Adds a workshop item as a dependency to the specified item.
+		/// </summary>
 		public async Task<bool> AddDependency( PublishedFileId child )
 		{
 			var r = await SteamUGC.Internal.AddDependency( Id, child );
 			return r?.Result == Result.OK;
 		}
 
+		/// <summary>
+		/// Removes a workshop item as a dependency from the specified item.
+		/// </summary>
 		public async Task<bool> RemoveDependency( PublishedFileId child )
 		{
 			var r = await SteamUGC.Internal.RemoveDependency( Id, child );
 			return r?.Result == Result.OK;
+		}
+
+		/// <summary>
+		/// Adds a dependency between the given item and the appid.
+		/// </summary>
+		public async Task<bool> AddAppDependency( AppId app )
+		{
+			var r = await SteamUGC.Internal.AddAppDependency( Id, app );
+			return r?.Result == Result.OK;
+		}
+
+		/// <summary>
+		/// Removes the dependency between the given item and the appid.
+		/// </summary>
+		public async Task<bool> RemoveAppDependency( AppId app )
+		{
+			var r = await SteamUGC.Internal.RemoveAppDependency( Id, app );
+			return r?.Result == Result.OK;
+		}
+
+		/// <summary>
+		/// Get the app dependencies associated with the given item. 
+		/// </summary>
+		public async Task<AppId[]> GetAppDependencies()
+		{
+			var r = await SteamUGC.Internal.GetAppDependencies( Id );
+			if ( r?.Result != Result.OK )
+				return null;
+
+			var ids = new AppId[r.Value.NumAppDependencies];
+			Array.Copy( r.Value.GAppIDs, ids, r.Value.NumAppDependencies );
+			return ids;
 		}
 
 		public Result Result => details.Result;

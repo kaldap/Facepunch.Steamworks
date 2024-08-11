@@ -204,5 +204,18 @@ namespace Steamworks
 			return status?.Accepted;
 		}
 
+		/// <summary>
+		/// Gets a list of all of the items the current user is subscribed to for the current game.
+		/// </summary>
+		public static Ugc.Item[] GetSubscribedItems()
+		{
+			var numItems = Internal.GetNumSubscribedItems();
+			var items = new PublishedFileId[numItems];
+			if ( numItems > 0 )
+				Internal.GetSubscribedItems( items, numItems );
+			return items.Select(i => new Ugc.Item(i)).ToArray();
+		}
+
+
 	}
 }
