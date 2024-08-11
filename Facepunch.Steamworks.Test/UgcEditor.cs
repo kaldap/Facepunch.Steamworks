@@ -27,7 +27,7 @@ namespace Steamworks
 							  .SubmitAsync();
 
 			Assert.IsTrue( result.Success );
-			Assert.AreNotEqual( result.FileId.Value, 0 );
+			Assert.AreNotEqual( result.FileId.Value, 0ul );
 
 			var deleted = await SteamUGC.DeleteFileAsync( result.FileId );
 			Assert.IsTrue( deleted );
@@ -52,7 +52,7 @@ namespace Steamworks
 			Console.WriteLine( $"Description: {description}" );
 
 			Assert.IsTrue( result.Success );
-			Assert.AreNotEqual( result.FileId.Value, 0 );
+			Assert.AreNotEqual( result.FileId.Value, 0ul );
 
 			var file = await Steamworks.SteamUGC.QueryFileAsync( result.FileId );
 
@@ -141,7 +141,7 @@ namespace Steamworks
 								  .SubmitAsync();
 
 				Assert.IsTrue( result.Success );
-				Assert.AreNotEqual( result.FileId.Value, 0 );
+				Assert.AreNotEqual( result.FileId.Value, 0ul );
 
 				fileid = result.FileId;
 			}

@@ -104,7 +104,7 @@ namespace Steamworks
 			// The client is leaving, and now wants to cancel the ticket
 			//
 
-			Assert.AreNotEqual( 0, clientTicket.Handle );
+			Assert.AreNotEqual( 0u, clientTicket.Handle );
 			clientTicket.Cancel();
 
 			//
