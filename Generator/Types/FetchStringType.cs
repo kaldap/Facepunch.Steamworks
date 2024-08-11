@@ -22,4 +22,6 @@ internal class FetchStringType : BaseType
 
 	public override string AsCallArgument() => $"mem{VarName}";
 	public override string Ref => "";
+
+	public string SizeArgumentName = null;
 }

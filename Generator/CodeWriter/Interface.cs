@@ -91,14 +91,28 @@ namespace Generator
 			{
 				var bt = BaseType.Parse( x.ParamType, x.ParamName, null, x.InArrayCount != null || x.OutArrayCount != null );
 				bt.Func = func.Name;
+				if (bt is FetchStringType fs) fs.SizeArgumentName = x.OutStringCount;
 				return bt;
 			} ).ToArray();
 
 			for( int i=0; i<args.Length; i++ )
 			{
-				if ( args[i] is FetchStringType )
+				if ( args[i] is FetchStringType fs )
 				{
-					if ( args[i + 1] is IntType || args[i + 1] is UIntType || args[i + 1] is UIntPtrType )
+					if ( !string.IsNullOrEmpty(fs.SizeArgumentName) )
+					{
+						int j;
+						for ( j = args.Length - 1; j >= 0; j-- )
+						{
+							if ( args[j].VarName == fs.SizeArgumentName )
+							{
+								if ( string.IsNullOrEmpty( args[j].Ref ) )
+									args[j] = new LiteralType( args[j], "(1024 * 32)" );
+								break;
+							}
+						}
+					}
+					else if ( args[i + 1] is IntType || args[i + 1] is UIntType || args[i + 1] is UIntPtrType )
 					{
 						if ( string.IsNullOrEmpty(  args[i + 1].Ref ) )
 						{
